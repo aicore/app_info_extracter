@@ -8,3 +8,16 @@ Apps:
       #country,lang
       - us, en
       - in, en
+
+  dropbox :
+    package_name : 'com.dropbox.android' #dropbox
+    geographies_languages:
+      #country,lang
+      - us, en
+      - in, en
+
+  mega :
+    package_name : 'mega.privacy.android.app' #mega
+    geographies_languages:
+      - us, en
+      - in, en

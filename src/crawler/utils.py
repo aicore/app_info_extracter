@@ -35,3 +35,7 @@ class Utils:
     @staticmethod
     def move_file_to_folder(file_name, dest_folder):
         shutil.move(file_name, dest_folder)
+
+    @staticmethod
+    def is_file_present(file):
+        return os.path.isfile(file)

@@ -31,10 +31,18 @@ class Scrapper:
         for score in tqdm(range(1, 6)):
             print()
             print('scarpping for score ' + str(score))
+            # Skip this score as this is already scrapped
+            if self.__should_scrap(score):
+                continue
             self.__scrap_reviews(score)
             self.__print_and_save(score)
             print('waiting for 1 minute ')
             time.sleep(60)
+
+    def __should_scrap(self, score):
+
+        reviews = self.name_of_app + '//' + self.__get_file_name(score)
+        return Utils.is_file_present(reviews)
 
     def __print_and_save(self, score):
         self.__print_summary()
@@ -61,13 +69,17 @@ class Scrapper:
         )
         self.reviews[score] = result
 
+    def __get_file_name(self, score):
+        file_name = 'review_' + self.package_name + \
+            '_' + self.country + '_'+self.lang+'_'+str(score) + '.csv'
+        return file_name
+
     def __save_results(self, score):
         dir_name = self.name_of_app
         Utils.create_directory_if_not_exit(dir_name)
         print("Results directory  " + dir_name)
+        file_name = self.__get_file_name(score)
         app_reviews_df = pd.DataFrame(self.reviews[score])
-        file_name = 'review_' + self.package_name + \
-            '_' + self.country + '_' + str(score) + '.csv'
         app_reviews_df.to_csv(file_name, index=None, header=True)
         # Hack as  pandas create file only in current folder
         # TODO: Fix this cleanly
