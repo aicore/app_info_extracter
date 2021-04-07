@@ -6,7 +6,7 @@ This utility takes config.yaml as input. Configuration for each app is self-cont
 
 ## How to use it?
 1. Check out the package
-2. Have python 3.8 on your system (use pyenv https://github.com/pyenv/pyenv to manage multiple version of python in your machine)
+2. Have python 3.8 on your system . Use [pyenv](https://github.com/pyenv/pyenv) to manage multiple version of python in your machine
 3. Open terminal and type  ``` cd app_info_extracter```
 4. Setup python [virtual enviorment](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/) having this will prevent you from messing up with the system-wide python installation
 5. Now type in terminal ``` cd src/crawler/```
