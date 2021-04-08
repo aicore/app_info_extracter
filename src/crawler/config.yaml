@@ -1,0 +1,23 @@
+# provde list of apps to scrap
+# Go to google playstore and find the package name of app from URI
+# and then add it to the list here
+Apps:
+  google_drive :
+    package_name : com.google.android.apps.docs #Google Drive
+    geographies_languages:
+      #country,lang
+      - us, en
+      - in, en
+
+  dropbox :
+    package_name : 'com.dropbox.android' #dropbox
+    geographies_languages:
+      #country,lang
+      - us, en
+      - in, en
+
+  mega :
+    package_name : 'mega.privacy.android.app' #mega
+    geographies_languages:
+      - us, en
+      - in, en
