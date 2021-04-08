@@ -17,5 +17,88 @@ This utility takes config.yaml as input. Configuration for each app is self-cont
 
 ## Contributing
 1.Use vim or InteliJUltimate or pycharm or visualstudio code.
+### Vim
 
+Following are the vimrc setting used to create this utility. Use it if you are fan of Vim.
+
+```
+set nu
+nnoremap <C-Left> :tabprevious<CR>
+nnoremap <C-Right> :tabnext<CR>
+
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+
+Plug 'sheerun/vim-polyglot'
+Plug 'dense-analysis/ale'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+Plug 'ludovicchabant/vim-gutentags'
+" Use release branch (recommend)
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'kamykn/spelunker.vim'
+Plug 'Raimondi/delimitMate'
+Plug 'mattn/emmet-vim'
+Plug 'davidhalter/jedi-vim'
+"Plug 'Chiel92/vim-autoformat'
+"Plug 'stephpy/vim-yaml'
+
+
+call plug#end()
+
+nmap <silent> [c <Plug>(ale_previous_wrap)
+nmap <silent> ]c <Plug>(ale_next_wrap)
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = '⚠️'
+
+let g:ale_linters = {
+      \ 'python': ['flake8']
+      \}
+" Fix files automatically on save
+let g:ale_fixers = {
+      \   'javascript': [
+      \ 'prettier',
+      \ 'eslint'
+      \ ],
+      \ 'python' : ['yapf']
+      \}
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 1
+nmap <F6> <Plug>(ale_fix)
+
+nnoremap <C-p> :Files<CR>
+nnoremap <Leader>b :Buffers<CR>
+nnoremap <Leader>h :History<CR>
+
+nnoremap <Leader>t :BTags<CR>
+nnoremap <Leader>T :Tags<CR>
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+
+"let g:gutentags_trace = 1
+
+let g:spelunker_disable_backquoted_checking = 1
+let g:enable_spelunker_vim = 1
+
+" Create own custom autogroup to enable spelunker.vim for specific filetypes.
+augroup spelunker
+  autocmd!
+  " Setting for g:spelunker_check_type = 1:
+  autocmd BufWinEnter,BufWritePost *.vim,*.js,*.jsx,*.json,*.md,*.py call spelunker#check()
+
+  " Setting for g:spelunker_check_type = 2:
+  autocmd CursorHold *.vim,*.js,*.jsx,*.json,*.md,*.py call spelunker#check_displayed_words()
+augroup END
+
+```
 
