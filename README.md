@@ -11,9 +11,9 @@ This utility takes config.yaml as input. Configuration for each app is self-cont
 4. Setup python [virtual enviorment](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/) having this will prevent you from messing up with the system-wide python installation
 5. Now type in terminal ``` cd src/crawler/```
 6. Add the required configuration in config.yaml using your favorite editor
-7. in terminal type ```python main.py ```
+7. in terminal type ```python main.py config.yaml```
 8. Results of the crawling will be stored in  separate directories for  each app in current directory 
-9. In case of failure, just re-run ```python main.py ```  script will start from where its left off.
+9. In case of failure, just re-run ```python main.py config.yaml```  script will start from where its left off.
 
 ## Contributing
 1.Use vim or InteliJUltimate or pycharm or visualstudio code.
