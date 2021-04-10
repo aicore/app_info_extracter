@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-# Contributors: Author 1, author 2...
+# Contributors: Dhruv Eldho Peter and others[see commit log]
 
 from scraper import Crawler
 import argparse
