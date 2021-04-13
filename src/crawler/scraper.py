@@ -25,7 +25,8 @@ from enum import Enum
 
 
 class Scrapper:
-    def __init__(self, name_of_app, package_name, country, lang, reviews_order):
+    def __init__(self, name_of_app, package_name,
+                 country, lang, reviews_order):
         if not package_name or not lang or not country or not name_of_app:
             raise ValueError("Invalid parameters passed for scrapping")
         self.name_of_app = name_of_app
@@ -78,9 +79,9 @@ class Scrapper:
         print(table)
 
     def __sort_reviews(self):
-        if Reviews_order(self.reviews_order).name == 'MOST_RECENT':
+        if Reviews_order(self.reviews_order) == Reviews_order.MOST_RECENT:
             return Sort.NEWEST  # get most recent reviews
-        elif Reviews_order(self.reviews_order).name == 'MOST_RELEVANT':
+        elif Reviews_order(self.reviews_order) == Reviews_order.MOST_RELEVANT:
             return Sort.MOST_RELEVANT  # get most relevant reviews
 
     def __scrap_reviews(self, score):
@@ -134,7 +135,7 @@ class Crawler:
         jobs = []
         package_name = package_info['package_name']
         reviews_order = package_info['reviews_order']
-        if reviews_order == None:  # no value is specified
+        if reviews_order is None:  # no value is specified
             reviews_order = "most relevant"  # so get most relevant reviews
         for country_lang in package_info['geographies_languages']:
             split = country_lang.split(',')
