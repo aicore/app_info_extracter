@@ -1,4 +1,4 @@
-# (C) Copyright 2021 core.ai (https://core.ai/) 
+# (C) Copyright 2021 core.ai (https://core.ai/)
 
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -21,16 +21,19 @@ from google_play_scraper import app, reviews_all, Sort
 from utils import Utils
 import time
 from tabulate import tabulate
+from enum import Enum
 
 
 class Scrapper:
-    def __init__(self, name_of_app, package_name, country, lang):
+    def __init__(self, name_of_app, package_name,
+                 country, lang, reviews_order):
         if not package_name or not lang or not country or not name_of_app:
             raise ValueError("Invalid parameters passed for scrapping")
         self.name_of_app = name_of_app
         self.package_name = package_name
         self.lang = lang
         self.country = country
+        self.reviews_order = reviews_order
         app_info = app(self.package_name, self.lang, self.country)
         del app_info["comments"]
         Utils.print_json(app_info)
@@ -75,13 +78,19 @@ class Scrapper:
         table = tabulate(results_to_print, ['Score', 'Number Of Entries'])
         print(table)
 
+    def __sort_reviews(self):
+        if Reviews_order(self.reviews_order) == Reviews_order.MOST_RECENT:
+            return Sort.NEWEST  # get most recent reviews
+        elif Reviews_order(self.reviews_order) == Reviews_order.MOST_RELEVANT:
+            return Sort.MOST_RELEVANT  # get most relevant reviews
+
     def __scrap_reviews(self, score):
         result = reviews_all(
             self.package_name,
             sleep_milliseconds=0,  # defaults to 0
             lang=self.lang,  # defaults to 'en'
             country=self.country,  # defaults to 'us'
-            sort=Sort.MOST_RELEVANT,  # defaults to Sort.MOST_RELEVANT
+            sort=self.__sort_reviews(),  # decide the order of reviews to scrap
             filter_score_with=score,  # defaults to None(means all score)
         )
         self.reviews[score] = result
@@ -125,10 +134,19 @@ class Crawler:
     def __prepare_package_for_crawling(self, package, package_info):
         jobs = []
         package_name = package_info['package_name']
+        reviews_order = package_info['reviews_order']
+        if reviews_order is None:  # no value is specified
+            reviews_order = "most relevant"  # so get most relevant reviews
         for country_lang in package_info['geographies_languages']:
             split = country_lang.split(',')
             country = split[0].strip()
             lang = split[1].strip()
-            scrapper = Scrapper(package, package_name, country, lang)
+            scrapper = Scrapper(package, package_name,
+                                country, lang, reviews_order)
             jobs.append(scrapper)
         return jobs
+
+
+class Reviews_order(Enum):
+    MOST_RELEVANT = "most relevant"
+    MOST_RECENT = "most recent"
