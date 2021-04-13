@@ -79,9 +79,9 @@ class Scrapper:
 
     def __sort_reviews(self):
         if Reviews_order(self.reviews_order).name == 'MOST_RECENT':
-            return Sort.NEWEST      #get most recent reviews
-        elif Reviews_order(self.reviews_order).name == 'MOST_RELEVANT' :
-            return Sort.MOST_RELEVANT       #get most relevant reviews
+            return Sort.NEWEST  # get most recent reviews
+        elif Reviews_order(self.reviews_order).name == 'MOST_RELEVANT':
+            return Sort.MOST_RELEVANT  # get most relevant reviews
 
     def __scrap_reviews(self, score):
         result = reviews_all(
@@ -134,6 +134,8 @@ class Crawler:
         jobs = []
         package_name = package_info['package_name']
         reviews_order = package_info['reviews_order']
+        if reviews_order == None:  # no value is specified
+            reviews_order = "most relevant"  # so get most relevant reviews
         for country_lang in package_info['geographies_languages']:
             split = country_lang.split(',')
             country = split[0].strip()

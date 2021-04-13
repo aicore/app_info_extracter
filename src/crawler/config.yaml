@@ -23,4 +23,4 @@ Apps:
     geographies_languages:
       - us, en
       - in, en
-    reviews_order: "most recent"
+    reviews_order: 
