@@ -25,8 +25,7 @@ from enum import Enum
 
 
 class Count:
-    def __init__(self, name_of_app, package_name,
-                 country, lang):
+    def __init__(self, name_of_app, package_name, country, lang):
         self.name_of_app = name_of_app
         self.package_name = package_name
         self.lang = lang
@@ -51,11 +50,11 @@ class Count:
             return
         dir_name = self.name_of_app
         file_name = self.__get_file_name(1)
-        path = ".\\" + dir_name + "\\" + file_name
+        path = './/' + dir_name + '//' + file_name
         df = pd.read_csv(path)
         for score in range(2, 6):
             file_name = self.__get_file_name(score)
-            path = ".\\" + dir_name + "\\" + file_name
+            path = './/' + dir_name + '//' + file_name
             df1 = pd.read_csv(path)
             df = df.append(df1)
         df['at'] = pd.to_datetime(df['at'])
@@ -76,11 +75,11 @@ class Count:
             return
         dir_name = self.name_of_app
         file_name = self.__get_file_name(1)
-        path = ".\\" + dir_name + "\\" + file_name
+        path = './/' + dir_name + '//' + file_name
         df = pd.read_csv(path)
         for score in range(2, 6):
             file_name = self.__get_file_name(score)
-            path = ".\\" + dir_name + "\\" + file_name
+            path = './/' + dir_name + '//' + file_name
             df1 = pd.read_csv(path)
             df = df.append(df1)
         df['at'] = pd.to_datetime(df['at'])
@@ -102,9 +101,8 @@ class Count:
 
 
 class Scrapper:
-    def __init__(self, name_of_app, package_name,
-                 country, lang, reviews_order, count_reviews_monthly,
-                 count_reviews_weekly):
+    def __init__(self, name_of_app, package_name, country, lang, reviews_order,
+                 count_reviews_monthly, count_reviews_weekly):
         if not package_name or not lang or not country or not name_of_app:
             raise ValueError("Invalid parameters passed for scrapping")
         self.name_of_app = name_of_app
@@ -233,8 +231,8 @@ class Crawler:
             split = country_lang.split(',')
             country = split[0].strip()
             lang = split[1].strip()
-            scrapper = Scrapper(package, package_name,
-                                country, lang, reviews_order, count_reviews_monthly,
+            scrapper = Scrapper(package, package_name, country, lang,
+                                reviews_order, count_reviews_monthly,
                                 count_reviews_weekly)
             jobs.append(scrapper)
         return jobs
