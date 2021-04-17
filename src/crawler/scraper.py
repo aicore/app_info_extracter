@@ -24,7 +24,7 @@ from tabulate import tabulate
 from enum import Enum
 
 
-class Count:
+class Analytics:
     def __init__(self, name_of_app, package_name, country, lang):
         self.name_of_app = name_of_app
         self.package_name = package_name
@@ -59,8 +59,6 @@ class Count:
             df = df.append(df1)
         df['at'] = pd.to_datetime(df['at'])
         result = df.groupby([df['at'].dt.year, df['at'].dt.month])
-        # df.index = pd.to_datetime(df['at'],format='%m/%d/%y %I:%M%p')
-        # df=df.groupby(by=[df.index.month, df.index.year])
         df.sort_values(by=['at'], ascending=True, inplace=True)
         df1 = df.groupby([df['at'].dt.year, df['at'].dt.month]).agg({'count'})
         l1 = df1[('at', 'count')].tolist()
@@ -191,7 +189,7 @@ class Scrapper:
 
     def count_reviews(self):
         if self.count_reviews_monthly == "yes" or self.count_reviews_weekly == "yes":
-            obj = Count(self.name_of_app, self.package_name, self.country,
+            obj = Analytics(self.name_of_app, self.package_name, self.country,
                         self.lang)
             if self.count_reviews_monthly == "yes":
                 obj.count_reviews_each_month()
