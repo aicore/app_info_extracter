@@ -24,9 +24,87 @@ from tabulate import tabulate
 from enum import Enum
 
 
+class Count:
+    def __init__(self, name_of_app, package_name,
+                 country, lang):
+        self.name_of_app = name_of_app
+        self.package_name = package_name
+        self.lang = lang
+        self.country = country
+
+    def __get_file_name(self, score):
+        file_name = 'review_' + self.package_name + \
+            '_' + self.country + '_'+self.lang+'_'+str(score) + '.csv'
+        return file_name
+
+    def __get_count_file_name(self, duration):
+        file_name = duration + '_review_count_' + self.package_name + \
+            '_' + self.country + '_'+self.lang+'_' + '.csv'
+        return file_name
+
+    def __should_count(self, duration):
+        file = self.name_of_app + '//' + self.__get_count_file_name(duration)
+        return Utils.is_file_present(file)
+
+    def count_reviews_each_month(self):
+        if self.__should_count('month'):
+            return
+        dir_name = self.name_of_app
+        file_name = self.__get_file_name(1)
+        path = ".\\" + dir_name + "\\" + file_name
+        df = pd.read_csv(path)
+        for score in range(2, 6):
+            file_name = self.__get_file_name(score)
+            path = ".\\" + dir_name + "\\" + file_name
+            df1 = pd.read_csv(path)
+            df = df.append(df1)
+        df['at'] = pd.to_datetime(df['at'])
+        result = df.groupby([df['at'].dt.year, df['at'].dt.month])
+        # df.index = pd.to_datetime(df['at'],format='%m/%d/%y %I:%M%p')
+        # df=df.groupby(by=[df.index.month, df.index.year])
+        df.sort_values(by=['at'], ascending=True, inplace=True)
+        df1 = df.groupby([df['at'].dt.year, df['at'].dt.month]).agg({'count'})
+        l1 = df1[('at', 'count')].tolist()
+        l = df['at'].dt.strftime("%m/%y").drop_duplicates().tolist()
+        final_df = pd.DataFrame({'time': l, 'Frequency': l1})
+        count_file_name = self.__get_count_file_name('month')
+        final_df.to_csv(count_file_name, index=None, header=True)
+        Utils.move_file_to_folder(count_file_name, dir_name)
+
+    def count_reviews_each_week(self):
+        if self.__should_count('week'):
+            return
+        dir_name = self.name_of_app
+        file_name = self.__get_file_name(1)
+        path = ".\\" + dir_name + "\\" + file_name
+        df = pd.read_csv(path)
+        for score in range(2, 6):
+            file_name = self.__get_file_name(score)
+            path = ".\\" + dir_name + "\\" + file_name
+            df1 = pd.read_csv(path)
+            df = df.append(df1)
+        df['at'] = pd.to_datetime(df['at'])
+        result = df.groupby([df['at'].dt.year, df['at'].dt.month])
+        # df.index = pd.to_datetime(df['at'],format='%m/%d/%y %I:%M%p')
+        # df=df.groupby(by=[df.index.month, df.index.year])
+        df.sort_values(by=['at'], ascending=True, inplace=True)
+        a = []
+        b = []
+        gr = df.groupby(pd.Grouper(key='at', freq='W'))
+        for name, group in gr:
+            if len(group) > 0:
+                a.append(name)
+                b.append(len(group))
+        final_df = pd.DataFrame({'time': a, 'Frequency': b})
+        count_file_name = self.__get_count_file_name('week')
+        final_df.to_csv(count_file_name, index=None, header=True)
+        Utils.move_file_to_folder(count_file_name, dir_name)
+
+
 class Scrapper:
     def __init__(self, name_of_app, package_name,
-                 country, lang, reviews_order):
+                 country, lang, reviews_order, count_reviews_monthly,
+                 count_reviews_weekly):
         if not package_name or not lang or not country or not name_of_app:
             raise ValueError("Invalid parameters passed for scrapping")
         self.name_of_app = name_of_app
@@ -34,6 +112,8 @@ class Scrapper:
         self.lang = lang
         self.country = country
         self.reviews_order = reviews_order
+        self.count_reviews_monthly = count_reviews_monthly
+        self.count_reviews_weekly = count_reviews_weekly
         app_info = app(self.package_name, self.lang, self.country)
         del app_info["comments"]
         Utils.print_json(app_info)
@@ -111,6 +191,15 @@ class Scrapper:
         # TODO: Fix this cleanly
         Utils.move_file_to_folder(file_name, dir_name)
 
+    def count_reviews(self):
+        if self.count_reviews_monthly == "yes" or self.count_reviews_weekly == "yes":
+            obj = Count(self.name_of_app, self.package_name, self.country,
+                        self.lang)
+            if self.count_reviews_monthly == "yes":
+                obj.count_reviews_each_month()
+            if self.count_reviews_weekly == "yes":
+                obj.count_reviews_each_week()
+
 
 class Crawler:
     def __init__(self, config_file):
@@ -122,6 +211,7 @@ class Crawler:
             job.scrap_review()
             # job.print_summary()
             # job.save_results()
+            job.count_reviews()
 
     def __prepare_crawler(self):
         jobs = []
@@ -135,6 +225,8 @@ class Crawler:
         jobs = []
         package_name = package_info['package_name']
         reviews_order = package_info['reviews_order']
+        count_reviews_monthly = package_info['count_reviews_monthly']
+        count_reviews_weekly = package_info['count_reviews_weekly']
         if reviews_order is None:  # no value is specified
             reviews_order = "most relevant"  # so get most relevant reviews
         for country_lang in package_info['geographies_languages']:
@@ -142,7 +234,8 @@ class Crawler:
             country = split[0].strip()
             lang = split[1].strip()
             scrapper = Scrapper(package, package_name,
-                                country, lang, reviews_order)
+                                country, lang, reviews_order, count_reviews_monthly,
+                                count_reviews_weekly)
             jobs.append(scrapper)
         return jobs
 
