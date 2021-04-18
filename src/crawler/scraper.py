@@ -82,8 +82,8 @@ class Analytics:
         df.sort_values(by=['at'], ascending=True, inplace=True)
         week = []
         no_of_reviews = []
-        gr = df.groupby(pd.Grouper(key='at', freq='W'))
-        for name, group in gr:
+        week_df = df.groupby(pd.Grouper(key='at', freq='W'))
+        for name, group in week_df:
             if len(group) > 0:
                 week.append(name)
                 no_of_reviews.append(len(group))
