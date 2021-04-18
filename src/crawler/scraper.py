@@ -62,7 +62,6 @@ class Analytics:
             return
         df = self.__combine_data()
         df['at'] = pd.to_datetime(df['at'])
-        result = df.groupby([df['at'].dt.year, df['at'].dt.month])
         df.sort_values(by=['at'], ascending=True, inplace=True)
         df1 = df.groupby([df['at'].dt.year, df['at'].dt.month]).agg({'count'})
         no_of_reviews = df1[('at', 'count')].tolist()
@@ -78,7 +77,6 @@ class Analytics:
             return
         df = self.__combine_data()
         df['at'] = pd.to_datetime(df['at'])
-        result = df.groupby([df['at'].dt.year, df['at'].dt.month])
         df.sort_values(by=['at'], ascending=True, inplace=True)
         week = []
         no_of_reviews = []
