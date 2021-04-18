@@ -65,11 +65,12 @@ class Analytics:
         result = df.groupby([df['at'].dt.year, df['at'].dt.month])
         df.sort_values(by=['at'], ascending=True, inplace=True)
         df1 = df.groupby([df['at'].dt.year, df['at'].dt.month]).agg({'count'})
-        l1 = df1[('at', 'count')].tolist()
-        l = df['at'].dt.strftime("%m/%y").drop_duplicates().tolist()
-        final_df = pd.DataFrame({'time': l, 'Frequency': l1})
+        no_of_reviews = df1[('at', 'count')].tolist()
+        month = df['at'].dt.strftime("%m/%y").drop_duplicates().tolist()
+        final_df = pd.DataFrame({'month': month, 'no_of_reviews': no_of_reviews})
         count_file_name = self.__get_count_file_name('month')
         final_df.to_csv(count_file_name, index=None, header=True)
+        dir_name = self.name_of_app
         Utils.move_file_to_folder(count_file_name, dir_name)
 
     def count_reviews_each_week(self):
@@ -78,19 +79,18 @@ class Analytics:
         df = self.__combine_data()
         df['at'] = pd.to_datetime(df['at'])
         result = df.groupby([df['at'].dt.year, df['at'].dt.month])
-        # df.index = pd.to_datetime(df['at'],format='%m/%d/%y %I:%M%p')
-        # df=df.groupby(by=[df.index.month, df.index.year])
         df.sort_values(by=['at'], ascending=True, inplace=True)
-        a = []
-        b = []
+        week = []
+        no_of_reviews = []
         gr = df.groupby(pd.Grouper(key='at', freq='W'))
         for name, group in gr:
             if len(group) > 0:
-                a.append(name)
-                b.append(len(group))
-        final_df = pd.DataFrame({'time': a, 'Frequency': b})
+                week.append(name)
+                no_of_reviews.append(len(group))
+        final_df = pd.DataFrame({'week': week, 'no_of_reviews': no_of_reviews})
         count_file_name = self.__get_count_file_name('week')
         final_df.to_csv(count_file_name, index=None, header=True)
+        dir_name = self.name_of_app
         Utils.move_file_to_folder(count_file_name, dir_name)
 
 
