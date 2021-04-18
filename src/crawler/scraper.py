@@ -45,9 +45,7 @@ class Analytics:
         file = self.name_of_app + '//' + self.__get_count_file_name(duration)
         return Utils.is_file_present(file)
 
-    def count_reviews_each_month(self):
-        if self.__should_count('month'):
-            return
+    def __combine_data(self):
         dir_name = self.name_of_app
         file_name = self.__get_file_name(1)
         path = './/' + dir_name + '//' + file_name
@@ -57,6 +55,12 @@ class Analytics:
             path = './/' + dir_name + '//' + file_name
             df1 = pd.read_csv(path)
             df = df.append(df1)
+        return df
+
+    def count_reviews_each_month(self):
+        if self.__should_count('month'):
+            return
+        df = self.__combine_data()
         df['at'] = pd.to_datetime(df['at'])
         result = df.groupby([df['at'].dt.year, df['at'].dt.month])
         df.sort_values(by=['at'], ascending=True, inplace=True)
@@ -71,15 +75,7 @@ class Analytics:
     def count_reviews_each_week(self):
         if self.__should_count('week'):
             return
-        dir_name = self.name_of_app
-        file_name = self.__get_file_name(1)
-        path = './/' + dir_name + '//' + file_name
-        df = pd.read_csv(path)
-        for score in range(2, 6):
-            file_name = self.__get_file_name(score)
-            path = './/' + dir_name + '//' + file_name
-            df1 = pd.read_csv(path)
-            df = df.append(df1)
+        df = self.__combine_data()
         df['at'] = pd.to_datetime(df['at'])
         result = df.groupby([df['at'].dt.year, df['at'].dt.month])
         # df.index = pd.to_datetime(df['at'],format='%m/%d/%y %I:%M%p')
@@ -189,12 +185,12 @@ class Scrapper:
 
     def count_reviews(self):
         if self.count_reviews_monthly == "yes" or self.count_reviews_weekly == "yes":
-            obj = Analytics(self.name_of_app, self.package_name, self.country,
+            analytics = Analytics(self.name_of_app, self.package_name, self.country,
                         self.lang)
             if self.count_reviews_monthly == "yes":
-                obj.count_reviews_each_month()
+                analytics.count_reviews_each_month()
             if self.count_reviews_weekly == "yes":
-                obj.count_reviews_each_week()
+                analytics.count_reviews_each_week()
 
 
 class Crawler:
