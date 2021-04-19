@@ -8,7 +8,9 @@ Apps:
       #country,lang
       - us, en
       - in, en
-    reviews_order: "most recent"
+    reviews_order: "most relevant"
+    count_reviews_monthly: "yes"
+    count_reviews_weekly: "yes"
 
   dropbox :
     package_name : 'com.dropbox.android' #dropbox
@@ -17,6 +19,8 @@ Apps:
       - us, en
       - in, en
     reviews_order: "most relevant"
+    count_reviews_monthly: "yes"
+    count_reviews_weekly: "no"
 
   mega :
     package_name : 'mega.privacy.android.app' #mega
@@ -24,3 +28,5 @@ Apps:
       - us, en
       - in, en
     reviews_order: 
+    count_reviews_monthly: "yes"
+    count_reviews_weekly: "no"

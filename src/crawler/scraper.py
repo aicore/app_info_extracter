@@ -22,11 +22,12 @@ from utils import Utils
 import time
 from tabulate import tabulate
 from enum import Enum
+from analytics import Analytics
 
 
 class Scrapper:
-    def __init__(self, name_of_app, package_name,
-                 country, lang, reviews_order):
+    def __init__(self, name_of_app, package_name, country, lang, reviews_order,
+                 count_reviews_monthly, count_reviews_weekly):
         if not package_name or not lang or not country or not name_of_app:
             raise ValueError("Invalid parameters passed for scrapping")
         self.name_of_app = name_of_app
@@ -34,6 +35,8 @@ class Scrapper:
         self.lang = lang
         self.country = country
         self.reviews_order = reviews_order
+        self.count_reviews_monthly = count_reviews_monthly
+        self.count_reviews_weekly = count_reviews_weekly
         app_info = app(self.package_name, self.lang, self.country)
         del app_info["comments"]
         Utils.print_json(app_info)
@@ -111,6 +114,15 @@ class Scrapper:
         # TODO: Fix this cleanly
         Utils.move_file_to_folder(file_name, dir_name)
 
+    def count_reviews(self):
+        if self.count_reviews_monthly == "yes" or self.count_reviews_weekly == "yes":
+            analytics = Analytics(self.name_of_app, self.package_name, self.country,
+                                  self.lang)
+            if self.count_reviews_monthly == "yes":
+                analytics.count_reviews_each_month()
+            if self.count_reviews_weekly == "yes":
+                analytics.count_reviews_each_week()
+
 
 class Crawler:
     def __init__(self, config_file):
@@ -122,6 +134,7 @@ class Crawler:
             job.scrap_review()
             # job.print_summary()
             # job.save_results()
+            job.count_reviews()
 
     def __prepare_crawler(self):
         jobs = []
@@ -135,14 +148,17 @@ class Crawler:
         jobs = []
         package_name = package_info['package_name']
         reviews_order = package_info['reviews_order']
+        count_reviews_monthly = package_info['count_reviews_monthly']
+        count_reviews_weekly = package_info['count_reviews_weekly']
         if reviews_order is None:  # no value is specified
             reviews_order = "most relevant"  # so get most relevant reviews
         for country_lang in package_info['geographies_languages']:
             split = country_lang.split(',')
             country = split[0].strip()
             lang = split[1].strip()
-            scrapper = Scrapper(package, package_name,
-                                country, lang, reviews_order)
+            scrapper = Scrapper(package, package_name, country, lang,
+                                reviews_order, count_reviews_monthly,
+                                count_reviews_weekly)
             jobs.append(scrapper)
         return jobs
 
