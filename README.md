@@ -15,7 +15,37 @@ This utility takes config.yaml as input. Configuration for each app is self-cont
 8. Results of the crawling will be stored in  separate directories for  each app in current directory 
 9. In case of failure, just re-run ```python main.py config.yaml```  script will start from where its left off.
 
+## Building and testing
+### Prerequisites
+1. Verify that Python-3 and pip3 should be installed in your system. terminal>`pip3 -V`
+2. Install pyb:  `pip3 install pybuilder`
+3. Verify Pyb  installation :`pyb --version`
+
+### To build,clean and run tests, use the following command:
+#### Build and test
+```shell
+pyb install_dependencies 
+# Pyb should work without pyb install_dependencies, but unfortunately it doesnt.
+# See details: here https://github.com/pybuilder/pybuilder/issues/727 
+pyb -v
+```
+* That's all you need to build the project.
+* Details about Test failures if any can be found in file `target\reports\unittest`
+* The binary artifacts will be available in the target folder.
+#### Clean builds :
+* > pyb clean
+  
+#### Reset environment :
+* > pyb clean && rm -rf .pybuilder
+
+### working with the build system
+* Tutorial: https://pybuilder.io/documentation/tutorial
+* To make changes to build scripts see this: https://pythonhosted.org/pybuilder/walkthrough-new.html
+
+## IDE setup
+* [Pycharm/intellij](https://www.jetbrains.com/pycharm/) support is present in source. `.idea` files are avilable when you clone this repo. Just open the folder in pycharm.
+
 ## Contributing
-1.Use vim or InteliJUltimate or pycharm or visualstudio code.
+* Use vim or InteliJUltimate or pycharm or visualstudio code.
 
 
