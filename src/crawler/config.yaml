@@ -8,19 +8,19 @@ Apps:
       #country,lang
       - us, en
       - in, en
-    reviews_order: "most recent"
-
-  dropbox :
-    package_name : 'com.dropbox.android' #dropbox
-    geographies_languages:
-      #country,lang
-      - us, en
-      - in, en
     reviews_order: "most relevant"
 
-  mega :
-    package_name : 'mega.privacy.android.app' #mega
-    geographies_languages:
-      - us, en
-      - in, en
-    reviews_order: 
+  # dropbox :
+  #   package_name : 'com.dropbox.android' #dropbox
+  #   geographies_languages:
+  #     #country,lang
+  #     - us, en
+  #     - in, en
+  #   reviews_order: "most relevant"
+
+  # mega :
+  #   package_name : 'mega.privacy.android.app' #mega
+  #   geographies_languages:
+  #     - us, en
+  #     - in, en
+  #   reviews_order: 

@@ -1,6 +1,7 @@
 [build-system]
 requires = [
     "setuptools>=42",
-    "wheel"
+    "wheel",
+    "pybuilder>=0.12.0"
 ]
-build-backend = "setuptools.build_meta"
+build-backend = "pybuilder.pep517"
