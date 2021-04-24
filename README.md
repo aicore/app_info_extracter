@@ -9,11 +9,12 @@ This utility takes config.yaml as input. Configuration for each app is self-cont
 2. Have python 3.8 on your system . Use [pyenv](https://github.com/pyenv/pyenv) to manage multiple version of python in your machine
 3. Open terminal and type  ``` cd app_info_extracter```
 4. Setup python [virtual enviorment](https://uoa-eresearch.github.io/eresearch-cookbook/recipe/2014/11/26/python-virtual-env/) having this will prevent you from messing up with the system-wide python installation
-5. Now type in terminal ``` cd src/crawler/```
-6. Add the required configuration in config.yaml using your favorite editor
-7. in terminal type ```python main.py config.yaml```
-8. Results of the crawling will be stored in  separate directories for  each app in current directory 
-9. In case of failure, just re-run ```python main.py config.yaml```  script will start from where its left off.
+5. Run ```pyb install_dependencies``` to install the dependencies for your project. Refer to the **Building and testing** section below incase of queries.
+6. To check if the build is successful, run ```pyb``` in the terminal.
+7. Add the required configuration in config.yaml using your favorite editor
+8. In terminal type ```python3 src/crawler/main.py src/crawler/config.yaml```
+9. Results of the crawling will be stored in  separate directories for  each app in current directory 
+10. In case of failure, just re-run ```python3 src/crawler/main.py src/crawler/config.yaml```  script will start from where its left off.
 
 ## Building and testing
 ### Prerequisites
